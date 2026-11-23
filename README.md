@@ -28,6 +28,12 @@ What I enjoy — in research and in the tools I build — is finding a clever wa
 
 - [32nd KOSEN Programming Contest](https://www.procon.gr.jp/archive/2021/) (2021), competition section — [4th in a semifinal match](https://www.gunma-ct.ac.jp/schoollife/event/procon/32_2021/), as the three-person team "try"ple from the National Institute of Technology (KOSEN), Gunma College.
 
+## Education
+
+- **Tokyo Metropolitan University**, Graduate School of Systems Design, Department of Computer Science — master's student, Apr. 2026 – Mar. 2028 (expected).
+- **Tokyo Metropolitan University**, Faculty of Systems Design, Department of Computer Science — transferred into the third year, Apr. 2024 – Mar. 2026.
+- **National Institute of Technology (KOSEN), Gunma College**, Department of Information and Computer Engineering — five-year program, Apr. 2019 – Mar. 2024.
+
 ## Meet the fox
 
 <p align="center">

@@ -1,4 +1,4 @@
-"""Build the images for the profile README: assets/hero-{dark,light}.svg and assets/fox.gif.
+"""Build the images for the profile README: assets/{hero,skills}-{dark,light}.svg and assets/fox.gif.
 
 Usage: python build.py [path to claude-plugins/plugins/fox]
 
@@ -6,10 +6,11 @@ Without the path, the fox plugin is read from the claude-plugins checkout
 next to this repository.
 
 Every image the README shows is kept in this repository: the foxes in the
-hero are the sprites of the fox plugin, inlined, and fox.gif is a copy of
-the plugin's preview. No image is fetched from another repository when the
-profile is viewed, so the images keep rendering whatever happens there.
-Rerun this script to pick up a change in the fox's art.
+hero are the sprites of the fox plugin, inlined; fox.gif is a copy of the
+plugin's preview; the skills row is drawn from the logos in logos/
+(Simple Icons, CC0). No image is fetched from another repository or service
+when the profile is viewed, so the images keep rendering whatever happens
+there. Rerun this script to pick up a change in the fox's art.
 """
 import json
 import re
@@ -21,6 +22,7 @@ from pathlib import Path
 HERE = Path(__file__).parent
 OUT = HERE / "assets"
 FOX = HERE.parent / "claude-plugins" / "plugins" / "fox"
+LOGOS = HERE / "logos"
 
 NAME = "Tomoharu Nakano"
 
@@ -34,6 +36,10 @@ THEMES = {
         floor="#d9b48a", plank="#c49a6c", edge="#ebd3b0",
     ),
 }
+
+SKILLS = {"python": "Python", "pytorch": "PyTorch", "c": "C", "git": "Git", "github": "GitHub",
+          "claudecode": "Claude Code"}  # logo file: name
+LOGO = 24  # side of a logo, in its own units
 
 # Pixel font, only the characters of NAME in upper case: each glyph is GLYPH_W x GLYPH_H dots, row by row ('#' is a dot)
 GLYPH_W, GLYPH_H = 5, 7
@@ -149,12 +155,28 @@ def hero(sprites: Path, theme: str) -> str:
     )
 
 
+def skills(theme: str) -> str:
+    """Return the skills SVG in `theme`: the logos of SKILLS in one row, in the color of the hero's title."""
+    scale, gap = 2, 24
+    size = LOGO * scale
+    pitch = size + gap
+    paths = []
+    for i, name in enumerate(SKILLS):
+        d = re.search(r' d="([^"]+)"', (LOGOS / f"{name}.svg").read_text(encoding="utf-8")).group(1)
+        paths.append(f'<path transform="translate({i * pitch}) scale({scale})" d="{d}"/>')
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {pitch * len(SKILLS) - gap} {size}" role="img" '
+        f'aria-label="{", ".join(SKILLS.values())}" fill="{THEMES[theme]["title"]}">{"".join(paths)}</svg>'
+    )
+
+
 def main() -> None:
     """Write the images to assets/, reading the fox plugin from argv[1] or its default location."""
     fox = Path(sys.argv[1]) if len(sys.argv) > 1 else FOX
     OUT.mkdir(exist_ok=True)
     for theme in THEMES:
         (OUT / f"hero-{theme}.svg").write_text(hero(fox / "sprites", theme), encoding="utf-8", newline="\n")
+        (OUT / f"skills-{theme}.svg").write_text(skills(theme), encoding="utf-8", newline="\n")
     shutil.copyfile(fox / "preview.gif", OUT / "fox.gif")
 
 

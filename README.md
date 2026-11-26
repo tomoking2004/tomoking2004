@@ -19,6 +19,7 @@ What I enjoy — in research and in the tools I build — is finding a clever wa
 
 - [**train4all**](https://github.com/tomoking2004/train4all) — a minimal PyTorch training framework. Implement three methods of one class, get a complete training loop.
 - [**claude-plugins**](https://github.com/tomoking2004/claude-plugins) — plugins for Claude and Claude Code, all finished to a single standard of beauty.
+- [**verba**](https://github.com/tomoking2004/verba) — a Windows desktop app that records any conversation you hear on your PC, from online meetings to lectures, and has Gemini transcribe and summarize it. Your voice and the other side's are kept on separate tracks, which help tell who said each line.
 
 ## Presentations
 

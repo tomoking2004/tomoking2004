@@ -103,15 +103,15 @@ def hero(sprites: Path, theme: str) -> str:
     t = THEMES[theme]
     w, h, floor_y = 1200, 430, 370
     radius, edge_h, scale = 12, 6, 3
-    covers = json.loads((sprites / "index.json").read_text(encoding="utf-8"))["covers"]
-    foxes = [  # (file name, x, delay in ticks, index of the book cover; None keeps the sprite's own)
+    variants = json.loads((sprites / "index.json").read_text(encoding="utf-8"))["variants"]
+    foxes = [  # (file name, x, delay in ticks, index of the color variant; 0 keeps the sprite's own)
         ("sub-research.svg", 250, 17, 1),
-        ("main-watch-0.svg", 504, 0, None),
-        ("sub-run.svg", 758, 31, None),
+        ("main-watch-0.svg", 504, 0, 0),
+        ("sub-run.svg", 758, 31, 0),
     ]
     css_parts, elements = [], []
-    for i, (name, x, delay, cover) in enumerate(foxes):
-        recolor = () if cover is None else zip(covers[0], covers[cover])
+    for i, (name, x, delay, variant) in enumerate(foxes):
+        recolor = zip(variants[0], variants[variant], strict=True)
         css, element = sprite(sprites / name, f"f{i}", x, floor_y - SPRITE * scale, scale, delay, recolor)
         css_parts.append(css)
         elements.append(element)

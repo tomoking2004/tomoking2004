@@ -7,10 +7,10 @@ next to this repository.
 
 Every image the README shows is kept in this repository. The hero inlines
 the sprites of the fox plugin, and fox.gif is a copy of the plugin's preview.
-The skills row is drawn from the logos in logos/ (Simple Icons, CC0). No image
-is fetched from another repository or service when the profile is viewed, so
-the images keep rendering whatever happens there. Rerun this script after the
-fox plugin exports its art again.
+The skills row sets the names in SKILLS under the logos in logos/ (Simple
+Icons, CC0). No image is fetched from another repository or service when the
+profile is viewed, so the images keep rendering whatever happens there. Rerun
+this script after the fox plugin exports its art again.
 """
 import json
 import re
@@ -38,8 +38,10 @@ THEMES = {
 }
 
 SKILLS = {"python": "Python", "pytorch": "PyTorch", "c": "C", "git": "Git", "github": "GitHub",
-          "claudecode": "Claude Code"}  # logo file: name
+          "claudecode": "Claude Code"}  # stem of a logo file in logos/: the skill's name, shown under its logo
 LOGO = 24  # side of a logo, in its own units
+# The system fonts of GitHub's text font stack
+SANS = "-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',Helvetica,Arial,sans-serif"
 
 # Pixel font, only for the characters of NAME in upper case.
 # Each glyph is GLYPH_W x GLYPH_H dots, row by row ('#' is a dot).
@@ -157,17 +159,24 @@ def hero(sprites: Path, theme: str) -> str:
 
 
 def skills(theme: str) -> str:
-    """Return the skills SVG in `theme`: the logos of SKILLS in one row, in the color of the hero's title."""
-    scale, gap = 2, 24
+    """Return the skills SVG in `theme`: the logos of SKILLS in one row, each over its name.
+
+    Everything is in the color of the hero's title. The names are text in
+    SANS, so they render in whichever of its fonts the viewer has.
+    """
+    scale, cell = 2, 104  # a logo's scale, and the width each logo and its name take up
     size = LOGO * scale
-    pitch = size + gap
-    paths = []
-    for i, name in enumerate(SKILLS):
-        d = re.search(r' d="([^"]+)"', (LOGOS / f"{name}.svg").read_text(encoding="utf-8")).group(1)
-        paths.append(f'<path transform="translate({i * pitch}) scale({scale})" d="{d}"/>')
+    baseline = size + 26  # y of the names' baseline, 26 units below the bottom of the logos
+    height = size + 32  # of the whole row, leaving room under the baseline for descenders
+    items = []
+    for i, (stem, name) in enumerate(SKILLS.items()):
+        d = re.search(r' d="([^"]+)"', (LOGOS / f"{stem}.svg").read_text(encoding="utf-8")).group(1)
+        items.append(f'<path transform="translate({i * cell + (cell - size) // 2}) scale({scale})" d="{d}"/>'
+                     f'<text x="{i * cell + cell // 2}" y="{baseline}">{name}</text>')
     return (
-        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {pitch * len(SKILLS) - gap} {size}" role="img" '
-        f'aria-label="{", ".join(SKILLS.values())}" fill="{THEMES[theme]["title"]}">{"".join(paths)}</svg>'
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {cell * len(SKILLS)} {height}" role="img" '
+        f'aria-label="{", ".join(SKILLS.values())}" fill="{THEMES[theme]["title"]}" font-size="16" '
+        f'font-family="{SANS}" text-anchor="middle">{"".join(items)}</svg>'
     )
 
 

@@ -12,7 +12,7 @@ What I enjoy — in research and in the tools I build — is finding a clever wa
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/skills-dark.svg">
-  <img alt="Python, PyTorch, C, Git, GitHub, Claude Code" src="assets/skills-light.svg" height="36">
+  <img alt="Python, PyTorch, C, Git, GitHub, Claude Code" src="assets/skills-light.svg" height="60">
 </picture>
 
 ## Projects

@@ -55,3 +55,7 @@ To have the fox keep you company, run these in Claude Code:
 /plugin marketplace add tomoking2004/claude-plugins
 /plugin install fox@tomoking2004
 ```
+
+The panel opens on its own in VS Code and in the Claude desktop app.
+On mobile it opens too, except for sessions running in the cloud.
+In the terminal, run `/fox` to show the panel as a list of what each fox is doing, in text instead of pictures.

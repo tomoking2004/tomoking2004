@@ -5,12 +5,12 @@ Usage: python build.py [path to claude-plugins/plugins/fox]
 Without the path, the fox plugin is read from the claude-plugins checkout
 next to this repository.
 
-Every image the README shows is kept in this repository: the foxes in the
-hero are the sprites of the fox plugin, inlined; fox.gif is a copy of the
-plugin's preview; the skills row is drawn from the logos in logos/
-(Simple Icons, CC0). No image is fetched from another repository or service
-when the profile is viewed, so the images keep rendering whatever happens
-there. Rerun this script to pick up a change in the fox's art.
+Every image the README shows is kept in this repository. The hero inlines
+the sprites of the fox plugin, and fox.gif is a copy of the plugin's preview.
+The skills row is drawn from the logos in logos/ (Simple Icons, CC0). No image
+is fetched from another repository or service when the profile is viewed, so
+the images keep rendering whatever happens there. Rerun this script after the
+fox plugin exports its art again.
 """
 import json
 import re
@@ -41,7 +41,8 @@ SKILLS = {"python": "Python", "pytorch": "PyTorch", "c": "C", "git": "Git", "git
           "claudecode": "Claude Code"}  # logo file: name
 LOGO = 24  # side of a logo, in its own units
 
-# Pixel font, only the characters of NAME in upper case: each glyph is GLYPH_W x GLYPH_H dots, row by row ('#' is a dot)
+# Pixel font, only for the characters of NAME in upper case.
+# Each glyph is GLYPH_W x GLYPH_H dots, row by row ('#' is a dot).
 GLYPH_W, GLYPH_H = 5, 7
 GLYPH_PITCH = GLYPH_W + 1  # a glyph and the gap after it
 GLYPHS = {
@@ -57,7 +58,7 @@ TICKS_PER_SECOND = 10  # the sprites' animations step in ticks
 
 
 def pixel_text(text: str, x: int, y: int, dot: int, cls: str) -> str:
-    """Return `text` in the pixel font as one path, a square of side `dot` per dot."""
+    """Return `text` in the pixel font as one path, drawing each dot of a glyph as a square of side `dot`."""
     d = []
     for i, ch in enumerate(text):
         glyph = GLYPHS[ch]
@@ -78,8 +79,8 @@ def sprite(path: Path, prefix: str, x: int, y: int, scale: int, delay: int,
     """Return the CSS and the element of a fox sprite, ready to inline.
 
     Class and keyframe names are prefixed with `prefix`, so that several
-    sprites fit in one SVG. The animation starts `delay` ticks in. `recolor`
-    lists (old, new) pairs of colors.
+    sprites share one SVG without their names clashing. The animation starts
+    `delay` ticks in. `recolor` lists (old, new) pairs of colors.
     """
     svg = path.read_text(encoding="utf-8")
     svg = svg.replace("animation-delay:0s", f"animation-delay:-{delay / TICKS_PER_SECOND}s")
